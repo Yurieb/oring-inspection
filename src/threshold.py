@@ -89,3 +89,26 @@ def dilate(binary_img):
 
     return output
 
+def erode(binary_img):
+    rows, cols = binary_img.shape
+    output = np.zeros((rows, cols), dtype=np.uint8)
+
+    # Skip borders
+    for x in range(1, rows - 1):
+        for y in range(1, cols - 1):
+
+            all_white = True
+
+            # Check 3x3 neighborhood
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if binary_img[x + i, y + j] != 255:
+                        all_white = False
+                        break
+                if not all_white:
+                    break
+
+            if all_white:
+                output[x, y] = 255
+
+    return output

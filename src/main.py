@@ -1,5 +1,5 @@
 import cv2 as cv
-from threshold import compute_histogram, compute_otsu_threshold, apply_threshold, dilate
+from threshold import compute_histogram, compute_otsu_threshold, apply_threshold, dilate, erode
 
 img = cv.imread('images/Oring1.jpg', 0)
 
@@ -21,9 +21,16 @@ binary = apply_threshold(img, threshold)
 
 dilated = dilate(binary)
 
+eroded = erode(binary)
+
+closed = erode(dilated)
+
 # Show results
 cv.imshow("Original Image", img)
 cv.imshow("Binary Image (Otsu)", binary)
 cv.imshow("Dilated Image", dilated)
+cv.imshow("Eroded Image", eroded)
+cv.imshow("Closed Image", closed)
+
 cv.waitKey(0)
 cv.destroyAllWindows()
