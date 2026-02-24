@@ -1,6 +1,6 @@
 import cv2 as cv
 from threshold import compute_histogram, compute_otsu_threshold, apply_threshold, dilate, erode
-from labeling import connected_components, component_areas
+from labeling import connected_components, component_areas, keep_largest_component
 
 img = cv.imread('images/Oring1.jpg', 0)
 
@@ -33,12 +33,24 @@ print("Number of connected components:", num_objects)
 areas = component_areas(labels, num_objects)
 print("Component areas:", areas)
 
+clean_ring = keep_largest_component(labels, areas)
+
+# decision logic
+if num_objects > 1:
+    print("Result: DEFECT - More than one object found")
+
+elif max(areas) < 5000:
+    print("Result: DEFECT - Ring is too small")
+
+else:
+    print("Result: OK - Ring looks good")
+
+
 # Show results
 cv.imshow("Original Image", img)
 cv.imshow("Binary Image (Otsu)", binary)
-cv.imshow("Dilated Image", dilated)
 cv.imshow("Closed Image", closed)
-cv.imshow("Closed Image", closed)
+cv.imshow("Largest Component Only", clean_ring)
 
 cv.waitKey(0)
 cv.destroyAllWindows()
