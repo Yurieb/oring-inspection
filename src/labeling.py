@@ -47,6 +47,28 @@ def component_areas(labels, num_objects):
 
     return areas
 
+# Calculate perimeter by counting boundary pixels of a component
+def compute_perimeter(clean_component):
+    rows, cols = clean_component.shape
+    perimeter = 0
+
+    for x in range(1, rows - 1):
+        for y in range(1, cols - 1):
+
+            # If pixel is white check if any neighbour is black boundary pixel
+            if clean_component[x, y] == 255:
+                for dx in [-1, 0, 1]:
+                    for dy in [-1, 0, 1]:
+                        if clean_component[x + dx, y + dy] == 0:
+                            perimeter += 1
+                            break
+                    else:
+                        continue
+                    break
+
+    return perimeter
+
+
 # Keep only the largest connected component
 def keep_largest_component(labels, areas):
   
@@ -55,4 +77,3 @@ def keep_largest_component(labels, areas):
     clean = (labels == largest_label).astype(np.uint8) * 255
 
     return clean
-
